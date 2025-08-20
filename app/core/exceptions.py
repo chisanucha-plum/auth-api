@@ -1,39 +1,31 @@
-from fastapi import HTTPException, status
+"""
+Custom exceptions for the application.
+"""
 
-class AuthException(HTTPException):
-    """Base authentication exception."""
-    pass
 
-class InvalidCredentialsException(AuthException):
-    """Raised when credentials are invalid."""
-    def __init__(self):
-        super().__init__(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid username or password",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
+class ServiceError(Exception):
+    """Base exception for service layer errors"""
 
-class TokenExpiredException(AuthException):
-    """Raised when token has expired."""
-    def __init__(self):
-        super().__init__(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has expired",
-            headers={"WWW-Authenticate": "Bearer"}
-        )
 
-class UserAlreadyExistsException(AuthException):
-    """Raised when trying to register a user that already exists."""
-    def __init__(self):
-        super().__init__(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User already exists"
-        )
+class ConversationNotFoundError(ServiceError):
+    """Raised when a conversation is not found"""
 
-class UserNotFoundException(AuthException):
-    """Raised when user is not found."""
-    def __init__(self):
-        super().__init__(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found"
-        )
+
+class KnowledgeNotFoundError(ServiceError):
+    """Raised when knowledge is not found"""
+
+
+class ValidationError(ServiceError):
+    """Raised when input validation fails"""
+
+
+class ExternalServiceError(ServiceError):
+    """Raised when external service (like Dify) fails"""
+
+
+class NetworkError(ServiceError):
+    """Raised when network operations fail"""
+
+
+class TokenDecodeError(Exception):
+    """Custom exception for token decoding failures."""

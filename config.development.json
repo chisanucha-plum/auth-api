@@ -1,19 +1,51 @@
 {
-  "app": {
-    "name": "Auth API",
-    "version": "1.0.0",
-    "debug": true
-  },
-  "server": {
-    "host": "0.0.0.0",
-    "port": 8000
-  },
-  "security": {
-    "secret_key": "your-secret-key-here-change-in-production",
-    "algorithm": "HS256",
-    "access_token_expire_minutes": 30
-  },
-  "database": {
-    "url": "sqlite:///./auth.db"
-  }
+    "application": {
+        "host": "http://localhost:8000",
+        "title": "NexAPI",
+        "version": "1.0.0",
+        "redirect_slashes": false
+    },
+    "cors": {
+        "allow_origins": [
+            "http://localhost:5173"
+        ],
+        "allow_credentials": true,
+        "allow_methods": [
+            "*"
+        ],
+        "allow_headers": [
+            "*"
+        ]
+    },
+    "http": {
+        "timeout": 360
+    },
+    "postgres": {
+        "host": "localhost",
+        "port": 5432,
+        "user": "myuser",
+        "password": "1234",
+        "database": "nexgpt"
+    },
+    "redis": {
+        "host": "localhost",
+        "port": 6379,
+        "db": 0,
+        "password": null
+    },
+    "key": {
+        "secret_key": "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7",
+        "algorithm": "HS256",
+        "access_token_minutes": 60
+    },
+    "refresh_token_cookie": {
+        "key": "refresh_token",
+        "value": "_nexgpt_refresh_token",
+        "httponly": false,
+        "secure": false,
+        "samesite": "lax",
+        "max_age": 2592000,
+        "path": "/",
+        "domain": null
+    }
 }
