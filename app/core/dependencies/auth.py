@@ -36,6 +36,8 @@ def require_roles(roles: list[str]):
     def role_checker(user: User = Depends(get_user)) -> User:
         if not user:
             raise HTTPException(status_code=401, detail="Authentication required")
+        if user.role == UserRole.SUPERVISOR:
+            return user
         if user.role not in roles:
             raise HTTPException(
                 status_code=403,
@@ -48,14 +50,18 @@ def require_roles(roles: list[str]):
 
 def get_guest(user: User | None = Depends(get_user)) -> User:
     """Get guest user - requires anonymous role."""
-    if user is not None and user.role == UserRole.ANONYMOUS:
+    if user is not None and (
+        user.role == UserRole.ANONYMOUS or user.role == UserRole.SUPERVISOR
+    ):
         return user
     raise HTTPException(status_code=401, detail="Unauthorized access - guest required")
 
 
 def get_authen_user(user: User | None = Depends(get_user)) -> User:
     """Get authenticated user - requires user role."""
-    if user is not None and user.role == UserRole.USER:
+    if user is not None and (
+        user.role == UserRole.USER or user.role == UserRole.SUPERVISOR
+    ):
         return user
     raise HTTPException(
         status_code=401, detail="Unauthorized access - authentication required"
@@ -64,7 +70,9 @@ def get_authen_user(user: User | None = Depends(get_user)) -> User:
 
 def get_admin_user(user: User | None = Depends(get_user)) -> User:
     """Get admin user - requires admin role."""
-    if user is not None and user.role == UserRole.ADMIN:
+    if user is not None and (
+        user.role == UserRole.ADMIN or user.role == UserRole.SUPERVISOR
+    ):
         return user
     raise HTTPException(status_code=403, detail="Forbidden - admin access required")
 
@@ -75,6 +83,15 @@ def get_any_user(user: User | None = Depends(get_user)) -> User:
         return user
     raise HTTPException(
         status_code=401, detail="Unauthorized access - authentication required"
+    )
+
+
+def get_supervisor_user(user: User = Depends(get_user)) -> User:
+    """Get supervisor user - requires supervisor role only"""
+    if user and user.role == UserRole.SUPERVISOR:
+        return user
+    raise HTTPException(
+        status_code=401, detail="Forbidden - supervisor access required"
     )
 
 
@@ -98,3 +115,4 @@ GuestDep = Annotated[User, Depends(get_guest)]
 AuthenticatedUserDep = Annotated[User, Depends(get_authen_user)]
 AdminUserDep = Annotated[User, Depends(get_admin_user)]
 AnyUserDep = Annotated[User, Depends(get_any_user)]
+SupervisorDep = Annotated[User, Depends(get_supervisor_user)]

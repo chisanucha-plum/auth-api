@@ -52,10 +52,12 @@ class UserRole(str, Enum):
     ADMIN = "admin"
     USER = "user"
     ANONYMOUS = "anonymous"
+    SUPERVISOR = "supervisor"
 
 
 class RolePermissions:
     ROLE_HIERARCHY = {
+        UserRole.SUPERVISOR: 4,
         UserRole.ADMIN: 3,
         UserRole.USER: 2,
         UserRole.ANONYMOUS: 1,
