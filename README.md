@@ -1,4 +1,4 @@
-# NexAPI - FastAPI Authentication Service
+# AuthAPI - FastAPI Authentication Service
 
 A production-ready FastAPI authentication API with JWT tokens, PostgreSQL, Redis, and comprehensive configuration management.
 
